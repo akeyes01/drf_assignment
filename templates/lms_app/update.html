@@ -9,7 +9,9 @@
     <h2>Update Author:</h2>
     <form method="post">
         {%csrf_token%}
-        Author:<input type="text" name="author" value="{{author.author}}">
+        <table>
+            {{form.as_table}}
+        </table>
         <input type="submit" value="Update">
     </form>
 </body>

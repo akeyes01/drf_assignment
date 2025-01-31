@@ -43,12 +43,24 @@ def deleteAuthor(request, id):
 
 def updateAuthor(request,id):
     Author = author.objects.get(id=id)
-    #Author = AuthorForm(instance=author)
+    form = AuthorForm(instance=Author)
     if request.method == 'POST':
-        form = AuthorForm(request.POST,instance=author)
+        #form = AuthorForm(request.POST,instance=author)
+        form = AuthorForm(request.POST,instance=Author)
         if form.is_valid():
             form.save()
             return redirect('/')
-    return render(request,'lms_app/update.html',{'Author':Author})
+    return render(request,'lms_app/update.html',{'form':form})
 
-
+'''
+def updateAuthor(request,id):
+    Author = author.objects.get(id=id)
+    #Author = AuthorForm(instance=author)
+    if request.method == 'POST':
+        #form = AuthorForm(request.POST,instance=author)
+        form = AuthorForm(request.POST,instance=Author)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    return render(request,'lms_app/update.html',{'author':Author})
+'''
