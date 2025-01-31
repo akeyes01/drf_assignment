@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Author Information</title>
+</head>
+<body>
+    <h1>Authors:</h1>
+    <table border="2">
+        <thead>
+            <th>Author Id</th>
+            <th>Author</th>
+        </thead>
+        {% for author in authors%}
+        <tr>
+            <!-- <td>{{author.author_id}}</td> -->
+            <td>{{author.id}}</td>
+            <td>{{author.author}}</td>
+            <!-- <td><a href="/delete/{{author.author_id}}">Delete</a></td> -->
+            <td><a href="/delete/{{author.id}}">Delete</a></td>
+            <td><a href="/update/{{author.id}}">Update</a></td>
+        </tr>
+        {%endfor%}
+    </table>
+    <br/><br/><br/>
+    <a href="/create">Add Author</a>
+</body>
+</html>

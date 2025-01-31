@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Information</title>
+</head>
+<body>
+    <h1>Author List:</h1>
+    {% if authors %}
+    <table>
+        <thead>
+            <th>Author Name</th>
+            <th>Author id</th>
+        </thead>
+        {% for auth in authors%}
+        <tr>
+            <td>{{auth.author}}</td>
+            <td>{{auth.author_id}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {%else%}
+    <p>No records found</p>
+    {% endif %}
+</body>
+</html>

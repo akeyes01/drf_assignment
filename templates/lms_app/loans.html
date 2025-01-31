@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Information</title>
+</head>
+<body>
+    <h1>Loan List:</h1>
+    {% if loans %}
+    <table>
+        <thead>
+            <th>Loan Id</th>
+            <th>Member id</th>
+            <th>Book id</th>
+            <th>Return Date</th>
+        </thead>
+        {% for loan in loans%}
+        <tr>
+            <td>{{loan.loan_id}}</td>
+            <td>{{loan.member_id_id}}</td>
+            <td>{{loan.book_id_id}}</td>
+            <td>{{loan.return_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {%else%}
+    <p>No records found</p>
+    {% endif %}
+</body>
+</html>
