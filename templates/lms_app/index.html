@@ -25,5 +25,13 @@
     </table>
     <br/><br/><br/>
     <a href="/create">Add Author</a>
+    <!-- <a href="/accounts/logout">Logout</a> -->
+
+    
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+      </form>
+
 </body>
 </html>
