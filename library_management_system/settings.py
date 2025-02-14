@@ -48,14 +48,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # New Code -> Youtube
+    # New Code
     #'django.contrib.sites',
     'lms_app',
-    # New Code -> Youtube
+    # New Code
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'rest_framework',
 
     #'django.contrib.sites',
 ]
@@ -64,6 +65,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # New Code
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -164,9 +167,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # New Codee
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = "none"
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'account_login'
+SOCIALACCOUNT_LOGIGN_ON_GET = False
+
+#ACCOUNT_EMAIL_VERIFICATION = "optional"
 #ACCOUNT_LOGOUT_ON_GET = True
-LOGOUT_REDIRECT_URL= '/'
+#LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+#LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/accounts/google/login/callback/'
+ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 # New code
 #SOCIALACCOUNT_PROVIDERES = {

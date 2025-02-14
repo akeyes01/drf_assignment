@@ -1,7 +1,15 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from lms_app.models import author, book, loan, member
 from lms_app.forms import AuthorForm
-from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.decorators import login_required, permission_required
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
+from .models import author
+from .serializers import AuthorSerializer
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 @login_required
@@ -44,7 +52,7 @@ def createAuthor(request):
     return render(request,'lms_app/create.html',{'form': form})
 
 @login_required
-@permission_required('lms_app.delete_author')
+@permission_required('lms_app.delete_author', raise_exception=True)
 def deleteAuthor(request, id):
     Author = author.objects.get(id=id)
     Author.delete()
@@ -62,8 +70,21 @@ def updateAuthor(request,id):
             return redirect('/')
     return render(request,'lms_app/update.html',{'form':form})
 
-'''
-def logout(request):
-    #return render(request,'lms_app/logout.html')
-    return render(request, 'registration/logout.html',{})
-'''
+class AuthorList(APIView):
+    def get(self, request):
+        Authors = author.objects.all()
+        serializer = AuthorSerializer(Authors, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AuthorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = author.objects.all()  
+    serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticated]
+    

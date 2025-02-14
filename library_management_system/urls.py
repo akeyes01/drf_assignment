@@ -19,11 +19,14 @@ from django.urls import path, include
 from lms_app import views
 from django.contrib.auth import views as auth_views
 
-
 urlpatterns = [
     # New code
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+
+    #path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('lms_app.urls')),
     path('auths/', views.authordata),
     path('books/', views.bookdata),
     path('loans/', views.loandata),
