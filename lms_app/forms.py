@@ -1,7 +1,7 @@
 from django import forms
-from lms_app.models import author
+from lms_app.models import Author
 
 class AuthorForm(forms.ModelForm):
     class Meta:
-        model=author
+        model=Author
         fields='__all__'

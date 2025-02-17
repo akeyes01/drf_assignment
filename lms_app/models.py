@@ -1,16 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
-class author(models.Model):
-    author_id = models.IntegerField(default=1)
+class Author(models.Model):
+    author_id = models.IntegerField(default=1, unique=True)
     #id = models.IntegerField
     author = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # ✅ Add owner field
+
 
 class book(models.Model):
     book_id = models.IntegerField
     title = models.CharField(max_length=200)
     publisher_id = models.IntegerField(null=True)
-    author = models.ForeignKey(author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     #author_id = models.ForeignKey(author, on_delete=models.CASCADE)
 
 class member(models.Model):

@@ -4,9 +4,9 @@ from rest_framework.routers import DefaultRouter
 from .views import AuthorViewSet
 
 router = DefaultRouter()
-router.register(r'author', AuthorViewSet)
+router.register(r'authors', AuthorViewSet, basename='authors')
 
 urlpatterns = [
-    path('authors/', views.AuthorList.as_view(), name='author-list'),
-    #path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
+    path('', include(router.urls)),
 ]

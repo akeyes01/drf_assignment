@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import author
+from .models import Author
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = author
-        fields = '__all__'
+        model = Author
+        #fields = '__all__'
+        fields = ['author_id', 'author', 'owner']
+        read_only_fields = ['owner']
+
+    def create(self, validated_data):
+        return Author.objects.create(**validated_data)

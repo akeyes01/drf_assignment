@@ -1,20 +1,25 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from lms_app.models import author, book, loan, member
+from lms_app.models import Author, book, loan, member
 from lms_app.forms import AuthorForm
 from django.contrib.auth.decorators import login_required, permission_required
-from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import viewsets
-from .models import author
+from .models import Author
 from .serializers import AuthorSerializer
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
+from .permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 @login_required
 def authordata(request):
-    authors = author.objects.all()
+    authors = Author.objects.all()
     authorDict = {'authors':authors}
     return render(request, 'lms_app/authors.html', authorDict)
 
@@ -38,7 +43,7 @@ def memberdata(request):
 
 @login_required
 def getAuthors(request):
-    authors = author.objects.all()
+    authors = Author.objects.all()
     return render(request, 'lms_app/index.html',{'authors': authors})
 
 @login_required
@@ -63,28 +68,39 @@ def updateAuthor(request,id):
     Author = author.objects.get(id=id)
     form = AuthorForm(instance=Author)
     if request.method == 'POST':
-        #form = AuthorForm(request.POST,instance=author)
         form = AuthorForm(request.POST,instance=Author)
         if form.is_valid():
             form.save()
             return redirect('/')
     return render(request,'lms_app/update.html',{'form':form})
 
-class AuthorList(APIView):
-    def get(self, request):
-        Authors = author.objects.all()
-        serializer = AuthorSerializer(Authors, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = AuthorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+class AuthorCustomPagination(PageNumberPagination):
+    page_size = 2
+
+class AuthorFilter(filters.FilterSet):
+    author = filters.CharFilter(field_name='author', lookup_expr='icontains')
+    id = filters.CharFilter(field_name='id', lookup_expr='exact')
+
+    class Meta:
+        model = Author
+        fields = ['id', 'author']
+
 class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = author.objects.all()  
+    queryset = Author.objects.all()  
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = AuthorFilter
+    pagination_class = AuthorCustomPagination
+    ordering_fields = ['id', 'author']
+    # Permission class to be added
+    permission_classes = [IsOwnerOrReadOnly]
+    #permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Ensure that the owner is set to the current user
+        #serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user)
+
     
